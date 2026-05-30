@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resilience Forge Tribe — The Path of Resilience</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --navy:        #0B1A2E;
+      --navy-mid:    #0E2040;
+      --teal:        #C9A84C;
+      --teal-glow:   rgba(201, 168, 76, 0.12);
+      --amber:       #F0C040;
+      --off-white:   #F5E9C8;
+      --text-muted:  rgba(245, 233, 200, 0.68);
+      --card-bg:     rgba(201, 168, 76, 0.06);
+      --card-border: rgba(201, 168, 76, 0.20);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--off-white);
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+      overflow: hidden;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 24px;
+    }
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(52px, 8vw, 82px);
+      font-weight: 800;
+      line-height: 1.08;
+      color: var(--off-white);
+      margin-bottom: 24px;
+    }
+    .hero-title span {
+      color: var(--teal);
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto 40px;
+    }
+
+    /* ─── BUTTON ─── */
+    .btn-primary {
+      display: inline-block;
+      background: var(--teal);
+      color: var(--navy);
+      padding: 16px 42px;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .btn-primary:hover {
+      background: #b8962e;
+      transform: translateY(-2px);
+    }
+
+    /* ─── HERO SHAPES ─── */
+    .hero-shapes-back,
+    .hero-shapes-mid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .shape-rect {
+      position: absolute;
+      width: 340px; height: 200px;
+      border: 2px solid rgba(201,168,76,0.12);
+      border-radius: 12px;
+      top: 12%; right: 7%;
+    }
+    .shape-circle {
+      position: absolute;
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.07);
+      bottom: 22%; left: 8%;
+    }
+    .shape-diamond {
+      position: absolute;
+      width: 55px; height: 55px;
+      background: rgba(245,166,35,0.18);
+      transform: rotate(45deg);
+      top: 58%; right: 16%;
+    }
+    .shape-dot {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      top: 28%; left: 7%;
+    }
+    .shape-ring {
+      position: absolute;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(245,166,35,0.14);
+      top: 68%; left: 22%;
+    }
+    .shape-dot2 {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(245,166,35,0.55);
+      top: 20%; right: 28%;
+    }
+
+    /* ─── FLOAT KEYFRAMES ─── */
+    @keyframes floatA {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50%       { transform: translateY(-16px) rotate(4deg); }
+    }
+    @keyframes floatB {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50%       { transform: translateY(-11px) rotate(-3deg); }
+    }
+    @keyframes floatC {
+      0%, 100% { transform: translateY(0px) rotate(45deg); }
+      50%       { transform: translateY(-9px) rotate(50deg); }
+    }
+    @keyframes floatD {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-7px); }
+    }
+    .float-a { animation: floatA 7s ease-in-out infinite; }
+    .float-b { animation: floatB 9s ease-in-out infinite 1.5s; }
+    .float-c { animation: floatC 6s ease-in-out infinite 0.5s; }
+    .float-d { animation: floatD 8s ease-in-out infinite 2s; }
+
+    /* ─── SCROLL INDICATOR ─── */
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+      50%       { transform: translateX(-50%) translateY(7px); opacity: 1; }
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    /* ─── PILLARS SECTION ─── */
+    .pillars-section {
+      background: var(--navy-mid);
+      padding: 110px 24px;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 70px;
+    }
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    .section-headline {
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--off-white);
+      margin-bottom: 18px;
+    }
+    .section-subtext {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .features-grid { grid-template-columns: 1fr; } }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 36px 28px;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .feature-card:hover {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.35);
+      transform: translateY(-5px);
+    }
+    .card-icon {
+      width: 44px; height: 44px;
+      margin-bottom: 22px;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--off-white);
+      margin-bottom: 12px;
+    }
+    .card-desc {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ─── VIDEO SECTION ─── */
+    .video-section {
+      background: var(--navy);
+      padding: 110px 24px;
+      border-top: 1px solid rgba(201,168,76,0.10);
+    }
+    .video-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.25);
+      box-shadow: 0 0 60px rgba(201,168,76,0.08);
+    }
+    .video-wrapper video {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+
+    /* ─── TIERS SECTION ─── */
+    .tiers-section {
+      background: var(--navy);
+      padding: 110px 24px;
+    }
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) { .tiers-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .tiers-grid { grid-template-columns: 1fr; } }
+
+    .tier-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .tier-card:hover {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.35);
+      transform: translateY(-4px);
+    }
+    .tier-score {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .tier-name {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--teal);
+      margin-bottom: 14px;
+    }
+    .tier-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ─── QUOTE BAND ─── */
+    .quote-band {
+      background: linear-gradient(135deg, #0a1e3a 0%, #0d2545 100%);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .quote-text {
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--off-white);
+      max-width: 800px;
+      margin: 0 auto 18px;
+      line-height: 1.35;
+    }
+    .quote-attr {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── CLOSING ─── */
+    .closing-section {
+      padding: 130px 24px;
+      text-align: center;
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+    .closing-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 500px 260px at 50% 60%, rgba(201,168,76,0.09), transparent);
+      pointer-events: none;
+    }
+    .closing-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .closing-headline {
+      font-size: clamp(40px, 6vw, 60px);
+      font-weight: 800;
+      color: var(--off-white);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .closing-headline span { color: var(--teal); }
+    .closing-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.65;
+    }
+    .closing-byline {
+      margin-top: 48px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .closing-byline strong {
+      color: var(--amber);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #060e1c;
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(247,247,242,0.35);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="hero">
+  <div class="hero-shapes-back">
+    <div class="shape-rect float-a"></div>
+    <div class="shape-circle float-b"></div>
+  </div>
+  <div class="hero-shapes-mid">
+    <div class="shape-diamond float-c"></div>
+    <div class="shape-dot float-d"></div>
+    <div class="shape-ring float-b"></div>
+    <div class="shape-dot2 float-a"></div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">The Path of Resilience · Skool Community</p>
+    <h1 class="hero-title">Welcome to the<br /><span>Resilience Forge</span> Tribe</h1>
+    <p class="hero-subtitle">
+      Resilience isn't a personality trait you're born with — it's a discipline you develop.
+      This is the community where discipline, mindset, and daily reflection become your greatest strengths.
+    </p>
+    <a href="https://www.skool.com/resilience-forge-tribe-4848/about" target="_blank" class="btn-primary">Join the Tribe</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="6 9 12 15 18 9" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════ THREE PILLARS ═══════════════════════ -->
+<section class="pillars-section">
+  <div class="section-header">
+    <p class="section-eyebrow features-headline">Three Pillars of Resilience</p>
+    <h2 class="section-headline features-headline">Where Is Your Armor Strong?</h2>
+    <p class="section-subtext features-headline">
+      Every member of the Forge is assessed across three core pillars. Know where you stand — then build from there.
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="18" stroke="#C9A84C" stroke-width="2"/>
+        <path d="M15 22 L20 27 L30 17" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="card-label">Pillar 1</p>
+      <h3 class="card-title">Mental Maintenance</h3>
+      <p class="card-desc">How you respond to failure, criticism, and pressure. Building the internal systems to stay grounded when life hits hardest.</p>
+    </div>
+
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 30 L22 14 L36 30" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="22" y1="14" x2="22" y2="36" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p class="card-label">Pillar 2</p>
+      <h3 class="card-title">The Pivot</h3>
+      <p class="card-desc">Your speed of recovery and redirection. Mastering the ability to shift strategy mid-stream and use past challenges as a compass.</p>
+    </div>
+
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="18" r="6" stroke="#C9A84C" stroke-width="2"/>
+        <circle cx="30" cy="18" r="6" stroke="#C9A84C" stroke-width="2"/>
+        <path d="M6 36 C6 28 22 28 22 36" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M22 36 C22 28 38 28 38 36" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p class="card-label">Pillar 3</p>
+      <h3 class="card-title">The Front-Row</h3>
+      <p class="card-desc">The power of your support system. Learning to ask for help strategically and investing in the resilience of those around you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ VIDEO SECTION ═══════════════════════ -->
+<section class="video-section">
+  <div class="section-header">
+    <p class="section-eyebrow video-headline">See It In Action</p>
+    <h2 class="section-headline video-headline">The Path of Resilience — Setup &amp; Blueprint</h2>
+    <p class="section-subtext video-headline">Watch how the Forge works. This is your roadmap to building unshakeable discipline and mindset.</p>
+  </div>
+  <div class="video-wrapper">
+    <video controls preload="metadata">
+      <source src="resilience-forge-tribe-landing.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</section>
+
+<!-- ═══════════════════════ QUOTE BAND ═══════════════════════ -->
+<div class="quote-band">
+  <p class="quote-text">"The path of resilience is paved with the pivots we choose to make."</p>
+  <p class="quote-attr">— Travis Sanders, Author · The Path of Resilience</p>
+</div>
+
+<!-- ═══════════════════════ SCORE TIERS ═══════════════════════ -->
+<section class="tiers-section">
+  <div class="section-header">
+    <p class="section-eyebrow tiers-headline">The Resilience Diagnostic</p>
+    <h2 class="section-headline tiers-headline">Know Your Starting Line</h2>
+    <p class="section-subtext tiers-headline">
+      Your score isn't a verdict — it's a map. Inside the community, you'll know exactly where to build.
+    </p>
+  </div>
+
+  <div class="tiers-grid">
+    <div class="tier-card tier-item">
+      <p class="tier-score">0 – 40</p>
+      <p class="tier-name">The Foundation</p>
+      <p class="tier-desc">In survival mode. Focus on Mental Maintenance to stabilize your daily routines and replenish your reserves.</p>
+    </div>
+    <div class="tier-card tier-item">
+      <p class="tier-score">41 – 70</p>
+      <p class="tier-name">The Builder</p>
+      <p class="tier-desc">Strong traits, inconsistent execution. Focus on The Pivot to stop stalling when your primary path is blocked.</p>
+    </div>
+    <div class="tier-card tier-item">
+      <p class="tier-score">71 – 90</p>
+      <p class="tier-name">The Architect</p>
+      <p class="tier-desc">Highly resilient. Now optimize your Front-Row for high-adversity leadership and long-term impact.</p>
+    </div>
+    <div class="tier-card tier-item">
+      <p class="tier-score">91 – 100</p>
+      <p class="tier-name">The Master</p>
+      <p class="tier-desc">Elite adaptability. Your focus shifts to Legacy &amp; Mentorship — sustaining output without burning out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CLOSING CTA ═══════════════════════ -->
+<section class="closing-section" id="join">
+  <div class="closing-glow"></div>
+  <div class="closing-content">
+    <h2 class="closing-headline">Your Score Is a<br /><span>Starting Line.</span></h2>
+    <p class="closing-sub">
+      Numbers provide the data — action provides the results. Join the Resilience Forge Tribe on Skool and let's build your tactical plan together.
+    </p>
+    <a href="https://www.skool.com/resilience-forge-tribe-4848/about" target="_blank" class="btn-primary">Join the Community</a>
+    <p class="closing-byline">
+      Led by <strong>Travis Sanders</strong> — Life Coach · Master Barber · Peer Advocate · Author of <em>The Path of Resilience</em>
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  &copy; 2026 Resilience Forge Coaching · Travis Sanders · All rights reserved.
+</footer>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set([".hero-eyebrow", ".hero-title", ".hero-subtitle", ".hero-cta", ".scroll-indicator"], {
+    opacity: 0, y: 30
+  });
+
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl
+    .to(".hero-eyebrow",     { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" })
+    .to(".hero-title",       { opacity: 1, y: 0, duration: 1.0, ease: "power3.out" }, "-=0.3")
+    .to(".hero-subtitle",    { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5")
+    .to(".hero-cta",         { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, "-=0.4")
+    .to(".scroll-indicator", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.2");
+
+  const hero = document.querySelector('.hero');
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+    gsap.to(".hero-shapes-back", { duration: 2.0, x: xPct * -45, y: yPct * -22, ease: "power1.out" });
+    gsap.to(".hero-shapes-mid",  { duration: 1.5, x: xPct * -22, y: yPct * -11, ease: "power1.out" });
+    gsap.to(".hero-content",     { duration: 1.2, x: xPct *   8, y: yPct *   5, ease: "power1.out" });
+  });
+
+  gsap.from(".features-headline", {
+    scrollTrigger: { trigger: ".pillars-section", start: "top 72%" },
+    opacity: 0, y: 35, duration: 0.8, ease: "power3.out", stagger: 0.12
+  });
+
+  gsap.set(".feature-card", {
+    opacity: 0, y: 55, rotateX: 18,
+    transformPerspective: 900, transformOrigin: "top center"
+  });
+  gsap.to(".feature-card", {
+    scrollTrigger: { trigger: ".pillars-section", start: "top 68%", toggleActions: "play none none reverse" },
+    opacity: 1, y: 0, rotateX: 0, duration: 0.75, stagger: 0.11, ease: "power2.out"
+  });
+
+  gsap.from(".video-headline", {
+    scrollTrigger: { trigger: ".video-section", start: "top 72%" },
+    opacity: 0, y: 35, duration: 0.8, ease: "power3.out", stagger: 0.12
+  });
+  gsap.from(".video-wrapper", {
+    scrollTrigger: { trigger: ".video-section", start: "top 68%" },
+    opacity: 0, y: 50, duration: 1.0, ease: "power2.out"
+  });
+
+  gsap.from(".quote-text, .quote-attr", {
+    scrollTrigger: { trigger: ".quote-band", start: "top 78%" },
+    opacity: 0, y: 30, duration: 0.9, ease: "power3.out", stagger: 0.2
+  });
+
+  gsap.from(".tiers-headline", {
+    scrollTrigger: { trigger: ".tiers-section", start: "top 72%" },
+    opacity: 0, y: 35, duration: 0.8, ease: "power3.out", stagger: 0.12
+  });
+
+  gsap.set(".tier-item", {
+    opacity: 0, y: 50, rotateX: 15,
+    transformPerspective: 900, transformOrigin: "top center"
+  });
+  gsap.to(".tier-item", {
+    scrollTrigger: { trigger: ".tiers-section", start: "top 68%", toggleActions: "play none none reverse" },
+    opacity: 1, y: 0, rotateX: 0, duration: 0.7, stagger: 0.1, ease: "power2.out"
+  });
+
+  gsap.from(".closing-content", {
+    scrollTrigger: { trigger: ".closing-section", start: "top 72%" },
+    opacity: 0, y: 45, duration: 1.0, ease: "power3.out"
+  });
+</script>
+</body>
+</html>
